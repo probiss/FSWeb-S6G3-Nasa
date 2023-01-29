@@ -6,26 +6,32 @@ import Nasa from "./Nasa/nasa"
 
 
 function App() {
-  const [history,setHistory] = useState ("2023-01-27");
-  const [apod,setApod] = useState(dummyData);
+  const [history,setHistory] = useState (dateFormatter(new Date()));
+  const [apod,setApod] = useState("");
   useEffect (() => {
     axios
-    .get("https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=" + history)
+    .get("https://api.nasa.gov/planetary/apod?api_key=Uw0ko9erPM1JKHPVRXNhcxzsMRoJWltEySbRbVlN&date=" + history)
     .then((response) => {
       setApod(response.data);
-    } )
-  },[history] )
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+},[history] )
 
-
-  function dateRandom(days){
-    let day = new Date(history);
-    day.setDate(day.getDate()+ days);
-    let realHistory = `${day.getFullYear()}-${day.getMonth()+1}-${day.getDate()} `
-    setHistory(realHistory);
+  function dateRandom(history) {
+    setHistory(dateFormatter(history));
   }
+
+  function dateFormatter(history){
+    let day = new Date(history);
+    let realHistory = `${day.getFullYear()}-${day.getMonth()+1}-${day.getDate()} `
+    return realHistory;
+  }
+  
   return (
     <div className="App">
-    <Nasa apod= {apod} dateRandom= {dateRandom} />
+    <Nasa apod= {apod} dateRandom= {dateRandom} history={history}  />
     </div>
   );
 }
